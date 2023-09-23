@@ -1,10 +1,17 @@
-import React from "react";
-
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { ImageBackground, StyleSheet, Text, View, Button } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Pressable,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { useFonts } from "expo-font";
 
 // import CreatePostsScreen from "./Screens/PostsScreen";
@@ -21,6 +28,8 @@ import ProfileScreen from "./Screens/ProfileScreen";
 import CreatePostsScreen from "./Screens/CreatePostsScreen";
 
 import PostsScreen from "./Screens/PostsScreen";
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
 const MainStack = createStackNavigator();
 const App = () => {
@@ -29,6 +38,9 @@ const App = () => {
     "Roboto-Black": require("./assets/fonts/Roboto-Black.ttf"),
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
   });
+  // const navigation = useNavigation();
+
+  // const [title, setTitle] = useState("Home");
 
   return (
     <View style={styles.container}>
@@ -51,16 +63,22 @@ const App = () => {
       <NavigationContainer>
         <MainStack.Navigator
           initialRouteName="Login"
-          // screenOptions={{ headerShown: false }}
+          screenOptions={{ headerTitleAlign: "center" }}
         >
           <MainStack.Screen
             name="Login"
             component={LoginScreen}
             // options={{ title: "Start screen" }}
+            options={{
+              headerShown: false,
+            }}
           />
           <MainStack.Screen
             name="Registration"
             component={RegistrationScreen}
+            options={{
+              headerShown: false,
+            }}
           />
           <MainStack.Screen
             name="Home"
@@ -70,25 +88,28 @@ const App = () => {
               headerStyle: {
                 // justifyContent: "center",
                 // backgroundColor: "#f4511e",
-                // height: 100,
+                // height: 1,
                 // display: "none",
                 // marginadding: 100,
                 // alignItems: "center",
               },
               // headerTintColor: "#fff",
-              // headerTitleStyle: {
-              //   left: "50vh",
-              //   // fontWeight: "bold",
-              //   fontSize: 26,
-              // },
-              // headerRight: () => (
-              //   <Button
-              //     onPress={() => alert("This is a button!")}
-              //     title="Press me"
-              //     color="#fff"
-              //     // style={{ marginRight: 22 }}
-              //   />
-              // ),
+              headerTitleStyle: {
+                left: "50vh",
+                // fontWeight: "bold",
+                fontSize: 26,
+              },
+              headerRight: () => (
+                <TouchableOpacity
+                  // onPress={() => navigation.navigate("Login")}
+                  style={styles.headerRight}
+                >
+                  <Image
+                    style={[styles.svg]}
+                    source={require("./assets/favicon.png")}
+                  />
+                </TouchableOpacity>
+              ),
             }}
           />
           <MainStack.Screen name="Comments" component={CommentsScreen} />
@@ -102,6 +123,12 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  headerRight: {
+    // position: "absolute",
+    // marginRight: 20,
+    // top: 22,
+    right: 16,
+  },
   container: {
     flex: 1,
   },

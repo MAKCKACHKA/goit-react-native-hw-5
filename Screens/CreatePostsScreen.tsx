@@ -40,12 +40,12 @@ const CreatePostsScreen = ({ navigation }) => {
     setLocation("");
   };
 
-  useEffect(() => {
-    // Скрыть навигацию на этой странице
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     // headerShown: false,
+  //     // title: "sadasd",
+  //   });
+  // }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

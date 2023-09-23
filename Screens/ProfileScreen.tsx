@@ -119,6 +119,110 @@ const ProfileScreen = () => {
                     </View>
                   </View>
                 </View>
+                <View style={styles.publication}>
+                  <Image
+                    style={styles.publicationImg}
+                    source={require("../assets/favicon.png")}
+                  />
+                  <Text style={styles.publicationDescription}>Ліс</Text>
+                  <View style={styles.publicationInfo}>
+                    <View style={styles.publicationElem}>
+                      {/* <SvgXml xml={messageCircle} style={[[styles.svg]]} /> */}
+                      {comentNumber === 0 ? (
+                        <Image
+                          style={[[styles.svg]]}
+                          source={require("../assets/svg/messageCircle.svg")}
+                          //   source={require("../assets/svg/thumbsUp.svg")}
+                        />
+                      ) : (
+                        <Image
+                          style={[[styles.svg]]}
+                          source={require("../assets/svg/messageCircleFill.svg")}
+                          //   source={require("../assets/svg/thumbsUp.svg")}
+                        />
+                      )}
+
+                      <Text style={styles.publicationsNumber}>
+                        {comentNumber}
+                      </Text>
+                      {likeNumber === 0 ? (
+                        <Image
+                          style={[[styles.svg], { marginLeft: 24 }]}
+                          source={require("../assets/svg/thumbsUp.svg")}
+                        />
+                      ) : (
+                        <Image
+                          style={[[styles.svg], { marginLeft: 24 }]}
+                          source={require("../assets/svg/thumbsUpFill.svg")}
+                        />
+                      )}
+
+                      <Text style={styles.publicationsNumber}>
+                        {likeNumber}
+                      </Text>
+                    </View>
+                    <View style={styles.publicationElem}>
+                      {/* <SvgXml xml={mapPin} style={styles.svg} /> */}
+                      <Image
+                        style={styles.svg}
+                        source={require("../assets/svg/mapPin.svg")}
+                      />
+                      <Text style={styles.publicationLocation}>Ukraine</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.publication}>
+                  <Image
+                    style={styles.publicationImg}
+                    source={require("../assets/favicon.png")}
+                  />
+                  <Text style={styles.publicationDescription}>Ліс</Text>
+                  <View style={styles.publicationInfo}>
+                    <View style={styles.publicationElem}>
+                      {/* <SvgXml xml={messageCircle} style={[[styles.svg]]} /> */}
+                      {comentNumber === 0 ? (
+                        <Image
+                          style={[[styles.svg]]}
+                          source={require("../assets/svg/messageCircle.svg")}
+                          //   source={require("../assets/svg/thumbsUp.svg")}
+                        />
+                      ) : (
+                        <Image
+                          style={[[styles.svg]]}
+                          source={require("../assets/svg/messageCircleFill.svg")}
+                          //   source={require("../assets/svg/thumbsUp.svg")}
+                        />
+                      )}
+
+                      <Text style={styles.publicationsNumber}>
+                        {comentNumber}
+                      </Text>
+                      {likeNumber === 0 ? (
+                        <Image
+                          style={[[styles.svg], { marginLeft: 24 }]}
+                          source={require("../assets/svg/thumbsUp.svg")}
+                        />
+                      ) : (
+                        <Image
+                          style={[[styles.svg], { marginLeft: 24 }]}
+                          source={require("../assets/svg/thumbsUpFill.svg")}
+                        />
+                      )}
+
+                      <Text style={styles.publicationsNumber}>
+                        {likeNumber}
+                      </Text>
+                    </View>
+                    <View style={styles.publicationElem}>
+                      {/* <SvgXml xml={mapPin} style={styles.svg} /> */}
+                      <Image
+                        style={styles.svg}
+                        source={require("../assets/svg/mapPin.svg")}
+                      />
+                      <Text style={styles.publicationLocation}>Ukraine</Text>
+                    </View>
+                  </View>
+                </View>
               </View>
             </View>
           </ScrollView>

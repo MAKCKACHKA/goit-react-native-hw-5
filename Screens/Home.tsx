@@ -36,25 +36,7 @@ import PostsScreen from "./PostsScreen";
 import ProfileScreen from "./ProfileScreen";
 
 import { useNavigation } from "@react-navigation/native";
-
-// function PostsScreen() {
-//   <View
-//     style={{
-//       flex: 1,
-//       alignItems: "center",
-//       justifyContent: "center",
-//       backgroundColor: "gray",
-//     }}
-//   >
-//     <Button
-//       title="Go to Settings"
-//       // onPress={() => useNavigation().navigate("PostsScreen")}
-//     />
-//     ;
-//   </View>;
-// }
-// function CreatePostsScreen;
-// function ProfileScreen;
+import { useRoute } from "@react-navigation/native";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -107,15 +89,49 @@ const Home = () => {
           }
         },
         tabBarStyle: styles.toolbar,
-        headerShown: false,
-      })}
-      tabBarOptions={{
+        // headerShown: false,
         showLabel: false,
-      }}
+      })}
+      // tabBarOptions={{
+      //   showLabel: false,
+      // }}
     >
-      <Tabs.Screen name="PostsScreen" component={PostsScreen} />
-      <Tabs.Screen name="CreatePostsScreen" component={CreatePostsScreen} />
-      <Tabs.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Tabs.Screen
+        name="Публікації"
+        component={PostsScreen}
+        options={{
+          // headerStyle: { overflow: "visible" },
+          headerTitleStyle: {
+            alignSelf: "center",
+            // marginLeft: "50%",
+            // top: "-50%",
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="Створити"
+        component={CreatePostsScreen}
+        // options={{
+        //   // headerStyle: {},
+        //   headerTitleStyle: {
+        //     // alignSelf: "center", // Це вирівнює текст заголовку по центру
+        //   },
+        //   // headerRight: () => (
+        //   //   <TouchableOpacity
+        //   //     onPress={() => {
+        //   //       // Дії, які ви хочете виконати при натисканні на кнопку у хедері
+        //   //     }}
+        //   //     style={styles.createBtn}
+        //   //   >
+        //   //     <Image
+        //   //       style={[styles.svg]}
+        //   //       source={require("../assets/svg/add.svg")}
+        //   //     />
+        //   //   </TouchableOpacity>
+        //   // ),
+        // }}
+      />
+      <Tabs.Screen name="Профіль" component={ProfileScreen} />
     </Tabs.Navigator>
   );
 };
