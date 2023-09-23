@@ -95,7 +95,7 @@ const App = () => {
               },
               // headerTintColor: "#fff",
               headerTitleStyle: {
-                left: "50vh",
+                // left: "50vh",
                 // fontWeight: "bold",
                 fontSize: 26,
               },
@@ -113,9 +113,9 @@ const App = () => {
             }}
           />
           <MainStack.Screen name="Comments" component={CommentsScreen} />
-          <MainStack.Screen name="Profile" component={ProfileScreen} />
+          {/* <MainStack.Screen name="Profile" component={ProfileScreen} />
           <MainStack.Screen name="PostsScreen" component={PostsScreen} />
-          <MainStack.Screen name="Create Posts" component={CreatePostsScreen} />
+          <MainStack.Screen name="Create Posts" component={CreatePostsScreen} /> */}
         </MainStack.Navigator>
       </NavigationContainer>
     </View>

@@ -31,6 +31,7 @@ import { SvgXml } from "react-native-svg";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import CreatePostsScreen from "./CreatePostsScreen";
 import PostsScreen from "./PostsScreen";
 import ProfileScreen from "./ProfileScreen";
@@ -49,7 +50,7 @@ const Home = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           if (
-            route.name === "PostsScreen"
+            route.name === "Публікації"
             // && focusedCreatePosts === false
           ) {
             return (
@@ -66,19 +67,15 @@ const Home = () => {
               //     navigation.navigate("CreatePostsScreen");
               //   }}
               // >
-              // focused ? (
-              //   setfocusedCreatePosts(true)
-              // ) : (
               <Image
                 style={styles.createBtn}
                 source={require("../assets/svg/plusBtn.svg")}
               />
-              // )
-              // {/* </Pressable> */}
+              // </Pressable>
 
               // <SvgXml xml={plusBtnSvg} style={styles.svg} />
             );
-          } else if (route.name === "ProfileScreen") {
+          } else if (route.name === "Профіль") {
             return (
               <Image
                 style={styles.svg}
@@ -91,6 +88,7 @@ const Home = () => {
         tabBarStyle: styles.toolbar,
         // headerShown: false,
         showLabel: false,
+        headerTitleAlign: "center",
       })}
       // tabBarOptions={{
       //   showLabel: false,
@@ -106,30 +104,43 @@ const Home = () => {
             // marginLeft: "50%",
             // top: "-50%",
           },
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // Дії, які ви хочете виконати при натисканні на кнопку у хедері
+              }}
+              style={styles.createBtn}
+            >
+              <Image
+                style={[styles.svg]}
+                source={require("../assets/svg/logOut.svg")}
+              />
+            </TouchableOpacity>
+          ),
         }}
       />
       <Tabs.Screen
-        name="Створити"
+        name="CreatePostsScreen"
         component={CreatePostsScreen}
-        // options={{
-        //   // headerStyle: {},
-        //   headerTitleStyle: {
-        //     // alignSelf: "center", // Це вирівнює текст заголовку по центру
-        //   },
-        //   // headerRight: () => (
-        //   //   <TouchableOpacity
-        //   //     onPress={() => {
-        //   //       // Дії, які ви хочете виконати при натисканні на кнопку у хедері
-        //   //     }}
-        //   //     style={styles.createBtn}
-        //   //   >
-        //   //     <Image
-        //   //       style={[styles.svg]}
-        //   //       source={require("../assets/svg/add.svg")}
-        //   //     />
-        //   //   </TouchableOpacity>
-        //   // ),
-        // }}
+        options={{
+          // headerStyle: {},
+          headerTitleStyle: {
+            // alignSelf: "center", // Це вирівнює текст заголовку по центру
+          },
+          // headerRight: () => (
+          //   <TouchableOpacity
+          //     onPress={() => {
+          //       // Дії, які ви хочете виконати при натисканні на кнопку у хедері
+          //     }}
+          //     style={styles.createBtn}
+          //   >
+          //     <Image
+          //       style={[styles.svg]}
+          //       source={require("../assets/svg/logOut.svg")}
+          //     />
+          //   </TouchableOpacity>
+          // ),
+        }}
       />
       <Tabs.Screen name="Профіль" component={ProfileScreen} />
     </Tabs.Navigator>
