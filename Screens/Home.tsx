@@ -43,7 +43,7 @@ const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const Home = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [focusedCreatePosts, setfocusedCreatePosts] = useState(false);
   return (
     <Tabs.Navigator
@@ -60,7 +60,7 @@ const Home = () => {
               />
               // <SvgXml xml={gridSvg} style={styles.svg} />
             );
-          } else if (route.name === "CreatePostsScreen") {
+          } else if (route.name === "Створити пост") {
             return (
               // <Pressable
               //   onPress={() => {
@@ -97,6 +97,7 @@ const Home = () => {
       <Tabs.Screen
         name="Публікації"
         component={PostsScreen}
+        initialParams={{ name: "", location: "", Image: "" }}
         options={{
           // headerStyle: { overflow: "visible" },
           headerTitleStyle: {
@@ -120,7 +121,7 @@ const Home = () => {
         }}
       />
       <Tabs.Screen
-        name="CreatePostsScreen"
+        name="Створити пост"
         component={CreatePostsScreen}
         options={{
           // headerStyle: {},

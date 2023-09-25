@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Text,
-  TouchableOpacity,
-  ImageBackground,
   Image,
   StyleSheet,
   View,
@@ -11,7 +9,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
   Pressable,
   ScrollView,
 } from "react-native";
@@ -26,6 +23,12 @@ import {
 } from "../assets/svgJS/svg";
 import { SvgXml } from "react-native-svg";
 
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+
 const CreatePostsScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
@@ -34,22 +37,78 @@ const CreatePostsScreen = ({ navigation }) => {
   const [nameFocused, setNameFocused] = useState(false);
   const [locationFocused, setLocationFocused] = useState(false);
 
-  const handleLogin = () => {
-    console.log(`name: ${name}, location: ${location}`);
-    setName("");
-    setLocation("");
-  };
+  const [userLocation, setUserLocation] = useState(null);
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        alert("Доступ до геолокації відхилено.");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setUserLocation(location);
+    })();
+  }, [Location.getCurrentPositionAsync({})]);
+
+  // useEffect(() => {
+  //   if (userLocation) {
+  //     // Коли отримуємо нове місцеположення користувача, встановлюємо його як значення `location`
+  //     setLocation(
+  //       `Місцевість: ${userLocation.coords.latitude}, ${userLocation.coords.longitude}`
+  //     );
+  //   }
+  // }, [userLocation]);
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+    if (hasPermission === false) {
+      alert("No access to camera");
+    }
+  }, [Camera.requestCameraPermissionsAsync()]);
+
+  const handleTakePicture = async () => {
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      await MediaLibrary.createAssetAsync(uri);
+      setImage(uri);
+    }
+  };
   // useEffect(() => {
   //   navigation.setOptions({
   //     // headerShown: false,
   //     // title: "sadasd",
   //   });
   // }, []);
+  const handlePublish = async () => {
+    navigation.navigate("Публікації", {
+      name: name,
+      location: location,
+      userLocation: userLocation,
+      image: image,
+    });
+    setName("");
+    setImage("");
+    setLocation("");
+    setUserLocation(null);
+  };
 
+  function degreesToRadians(angle) {
+    return angle * (Math.PI / 180);
+  }
+  function kMToLongitudes(km, atLatitude) {
+    return (km * 0.0089831) / Math.cos(degreesToRadians(atLatitude));
+  }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.wrapper}>
+      <ScrollView style={styles.wrapper}>
         {/* <View style={styles.header}>
           <Text style={styles.title}>Створити публікацію</Text>
           <View style={styles.headerLeft}>
@@ -63,14 +122,22 @@ const CreatePostsScreen = ({ navigation }) => {
             /> */}
         {/* </View> */}
         {/* </View> */}
-        <View style={styles.publications}>
+        <View style={styles.container}>
           <View style={styles.publication}>
             <View style={styles.imageholder}>
-              <Image
-                style={styles.publicationImg}
-                source={require("../assets/favicon.png")}
-              />
-              <View style={styles.cameraHolder}>
+              {image ? (
+                <Image style={styles.publicationImg} source={{ uri: image }} />
+              ) : (
+                <Camera
+                  style={styles.publicationImg}
+                  // type={Camera.Constants.Type.back}
+                  ref={setCameraRef}
+                />
+              )}
+              <Pressable
+                style={styles.cameraHolder}
+                onPress={handleTakePicture}
+              >
                 {/* <Image
                 style={styles.svg}
                 tintColor={"rgba(189, 189, 189, 1)"}
@@ -83,11 +150,13 @@ const CreatePostsScreen = ({ navigation }) => {
                   source={require("../assets/svg/cameraBlack.svg")}
                 />
                 {/* <SvgXml xml={cameraBlack} style={[styles.svg]} /> */}
-              </View>
+              </Pressable>
             </View>
-            <Text style={styles.photoEdit}>Завантажте фото</Text>
-            {/* <Text style={styles.photoEdit}>Редагувати фото</Text> */}
-
+            {image === "" ? (
+              <Text style={styles.photoTxt}>Завантажте фото</Text>
+            ) : (
+              <Text style={styles.photoTxt}>Редагувати фото</Text>
+            )}
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : null}
               style={styles.wrapper}
@@ -123,22 +192,79 @@ const CreatePostsScreen = ({ navigation }) => {
                 />
               </View>
 
-              <Pressable style={styles.publishBtn} onPress={handleLogin}>
-                <Text style={styles.publishBtnText}>Опубліковати</Text>
+              {/* {userLocation && (
+                <MapView
+                  style={styles.imageholder}
+                  showsUserLocation={true}
+                  followsUserLocation={true}
+                  minZoomLevel={10}
+                  region={{
+                    latitude: userLocation.coords.latitude,
+                    latitudeDelta: 0.00001,
+                    longitude: userLocation.coords.longitude,
+                    longitudeDelta: kMToLongitudes(
+                      1.0,
+                      userLocation.coords.latitude
+                    ),
+
+                    // longitudeDelta: userLocation.coords.latitude,
+                    // latitudeDelta: userLocation.coords.longitude,
+                  }}
+                >
+                  <Marker
+                    title={name}
+                    coordinate={{
+                      latitude: userLocation.coords.latitude,
+                      longitude: userLocation.coords.longitude,
+                    }}
+                    description="location"
+                  />
+                </MapView>
+              )} */}
+
+              {/* <MapView
+                style={styles.imageholder}
+                // showsUserLocation={true}
+                // followsUserLocation={true}
+                region={{
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+                mapType="standard"
+                minZoomLevel={1}
+                onMapReady={() => console.log("Map is ready")}
+                onRegionChange={() => console.log("Region change")}
+              >
+                <Marker
+                  title="I am here"
+                  coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+                  description="Hello"
+                />
+              </MapView> */}
+
+              <Pressable
+                style={styles.publishBtn}
+                onPress={handlePublish}
+                disabled={!image || !name || !location}
+              >
+                <Text style={styles.publishBtnText}>Опублікувати</Text>
               </Pressable>
+
+              <View style={styles.toolbar}>
+                <Pressable style={styles.delBtn}>
+                  <Image
+                    style={styles.svg}
+                    source={require("../assets/svg/trash.svg")}
+                  />
+                  {/* <SvgXml xml={trash} style={styles.svg} /> */}
+                </Pressable>
+              </View>
             </KeyboardAvoidingView>
           </View>
         </View>
-        <View style={styles.toolbar}>
-          <Pressable style={styles.delBtn}>
-            <Image
-              style={styles.svg}
-              source={require("../assets/svg/trash.svg")}
-            />
-            {/* <SvgXml xml={trash} style={styles.svg} /> */}
-          </Pressable>
-        </View>
-      </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 };
@@ -161,10 +287,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderRadius: 100,
   },
-  publications: {
+  container: {
     flex: 1,
     alignItems: "center",
-    gap: 34,
+    gap: 30,
   },
 
   publication: {
@@ -179,13 +305,13 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     borderRadius: 8,
   },
-  photoEdit: {
+  photoTxt: {
     top: 8,
     color: "#BDBDBD",
     // font-family: Roboto;
     fontSize: 16,
     fontStyle: "normal",
-    marginBottom: 32,
+    marginBottom: 28,
   },
   wrapper: {
     flex: 1,
@@ -194,7 +320,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 44,
+    paddingTop: 40,
     paddingBottom: 11,
     borderBottomColor: "black",
     borderBottomWidth: 1,
@@ -218,17 +344,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     // right: 10,
   },
-  container: {
-    borderRadius: 10,
-    alignItems: "center",
-    position: "relative",
-    width: "100%",
-    height: 489,
-    // borderTopLeftRadius: 25,
-    // borderTopRightRadius: 25,
-    // borderBottomLeftRadius: 0,
-    // borderBottomRightRadius: 0,
-  },
   profileData: {
     width: 171,
     height: 60,
@@ -237,7 +352,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     marginLeft: 16,
-    marginTop: 32,
+    marginTop: 30,
   },
   delBtn: {
     width: 70,
@@ -253,8 +368,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // gap: 39,
     alignItems: "center",
-    paddingTop: 9,
-    paddingBottom: 34,
+    paddingTop: 100,
+    // paddingBottom: 34,
     // borderTopColor: "black",
     // borderTopWidth: 1,
   },
@@ -300,8 +415,8 @@ const styles = StyleSheet.create({
     marginTop: 32,
 
     borderRadius: 100,
-    // backgroundColor: "#FF6C00",
-    backgroundColor: "#F6F6F6",
+    backgroundColor: "#FF6C00",
+    // backgroundColor: "#F6F6F6",
 
     color: "white",
     textAlign: "center",

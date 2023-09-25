@@ -19,8 +19,11 @@ import {
 import { arrowLeft, Send } from "../assets/svgJS/svg";
 import { SvgXml } from "react-native-svg";
 
-const CommentsScreen = () => {
+const CommentsScreen = ({ route, navigation }) => {
   const [coment, setСoment] = useState("");
+
+  const { id, location, image, userLocation } = route.params;
+
   //   const [showPassword, setShowPassword] = useState(false);
   const handleSend = () => {
     console.log(`Коментар:  ${coment}`);
@@ -33,7 +36,7 @@ const CommentsScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.wrapper}>
         <View style={styles.header}>
-          <Text style={styles.title}>Коментарі</Text>
+          <Text style={styles.title}>Коментарі{id}</Text>
           <View style={styles.headerLeft}>
             <Image
               style={[styles.svg, { alignSelf: "center" }]}

@@ -20,6 +20,7 @@ import Svg, { Circle } from "react-native-svg";
 import { SvgUri } from "react-native-svg";
 // import SVGImg from "../assets/svg/add.svg";
 //                     <SVGImg width={200} height={200} />;
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { messageCircle, mapPin, logOutSvg } from "../assets/svgJS/svg";
 

@@ -17,12 +17,35 @@ import {
 } from "react-native";
 
 import Svg, { Path } from "react-native-svg";
-import { logOutSvg, gridSvg, plusBtnSvg, userSvg } from "../assets/svgJS/svg";
+import {
+  logOutSvg,
+  gridSvg,
+  plusBtnSvg,
+  userSvg,
+  messageCircle,
+  mapPin,
+} from "../assets/svgJS/svg";
 import { SvgXml } from "react-native-svg";
+import { useNavigation, useRoute } from "@react-navigation/native";
+// import { nanoid } from "nanoid";
 
-const PostsScreen = () => {
-  //   const [email, setEmail] = useState("");
-  //   const [showPassword, setShowPassword] = useState(false);
+const PostsScreen = ({ route, navigation }) => {
+  const [posts, setPosts] = useState([
+    // { name: "adasdadasd", location: "sadasdasd", image: image },
+  ]);
+
+  const { name, location, image, userLocation } = route.params;
+
+  useEffect(() => {
+    const newPost = {
+      id: Math.random(),
+      name: name,
+      location: location,
+      userLocation: userLocation,
+      image: image,
+    };
+    setPosts((prevPosts) => [...prevPosts, newPost]);
+  }, [name, location, image]);
 
   return (
     <View style={styles.wrapper}>
@@ -38,6 +61,11 @@ const PostsScreen = () => {
           {/* <SvgXml xml={logOutSvg} style={styles.svg} /> */}
       {/* </View>
       </View>  */}
+      {/* <Text>
+        name: {JSON.stringify(name)} location: {JSON.stringify(location)}
+        image: {JSON.stringify(image)}
+      </Text> */}
+
       <ScrollView>
         <View
           style={{
@@ -56,7 +84,7 @@ const PostsScreen = () => {
               source={require("../assets/favicon.png")}
             />
             <View style={styles.profileDataText}>
-              <Text style={styles.profileName}>Natali Romanova</Text>
+              <Text style={styles.profileName}>Natali Romanova{}</Text>
               <Text style={styles.profileEmail}>email@example.com</Text>
             </View>
           </View>
@@ -69,114 +97,89 @@ const PostsScreen = () => {
               <Text style={styles.publicationDescription}>Ліс</Text>
               <View style={styles.publicationInfo}>
                 <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={messageCircle} style={styles.svg} /> */}
+                  <SvgXml xml={messageCircle} style={styles.svg} />
 
-                  <Image
+                  {/* <Image
                     style={styles.svg}
                     source={require("../assets/svg/messageCircle.svg")}
-                  />
+                  /> */}
 
                   <Text style={styles.publicationsComentNumber}>0</Text>
                 </View>
                 <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={mapPin} style={styles.svg} /> */}
-                  <Image
+                  <SvgXml xml={mapPin} style={styles.svg} />
+                  {/* <Image
                     style={styles.svg}
                     source={require("../assets/svg/mapPin.svg")}
-                  />
+                  /> */}
                   <Text style={styles.publicationLocation}>
                     Ivano-Frankivs'k Region, Ukraine
                   </Text>
                 </View>
               </View>
             </View>
-            <View style={styles.publication}>
-              <Image
-                style={styles.publicationImg}
-                source={require("../assets/favicon.png")}
-              />
-              <Text style={styles.publicationDescription}>Ліс</Text>
-              <View style={styles.publicationInfo}>
-                <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={messageCircle} style={styles.svg} /> */}
 
-                  <Image
-                    style={styles.svg}
-                    source={require("../assets/svg/messageCircle.svg")}
-                  />
+            {image !== "" &&
+              posts
+                .filter((post) => post.name !== "")
+                .map((post) => {
+                  return (
+                    <View
+                      style={styles.publication}
+                      // id={`${Math.random()}`}
+                      key={post.id}
+                    >
+                      <Image
+                        style={styles.publicationImg}
+                        source={{ uri: post.image }}
+                      />
 
-                  <Text style={styles.publicationsComentNumber}>0</Text>
-                </View>
-                <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={mapPin} style={styles.svg} /> */}
-                  <Image
-                    style={styles.svg}
-                    source={require("../assets/svg/mapPin.svg")}
-                  />
-                  <Text style={styles.publicationLocation}>
-                    Ivano-Frankivs'k Region, Ukraine
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.publication}>
-              <Image
-                style={styles.publicationImg}
-                source={require("../assets/favicon.png")}
-              />
-              <Text style={styles.publicationDescription}>Ліс</Text>
-              <View style={styles.publicationInfo}>
-                <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={messageCircle} style={styles.svg} /> */}
+                      <Text style={styles.publicationDescription}>
+                        {post.name}
+                      </Text>
+                      <View style={styles.publicationInfo}>
+                        <Pressable
+                          onPress={() =>
+                            navigation.navigate("Comments", {
+                              id: post.id,
+                              name: post.location,
+                              userLocation: post.userLocation,
+                            })
+                          }
+                          style={styles.publicationElem}
+                        >
+                          <SvgXml xml={messageCircle} style={styles.svg} />
 
-                  <Image
-                    style={styles.svg}
-                    source={require("../assets/svg/messageCircle.svg")}
-                  />
+                          {/* <Image
+                            style={styles.svg}
+                            source={require("../assets/svg/messageCircle.svg")}
+                          /> */}
 
-                  <Text style={styles.publicationsComentNumber}>0</Text>
-                </View>
-                <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={mapPin} style={styles.svg} /> */}
-                  <Image
-                    style={styles.svg}
-                    source={require("../assets/svg/mapPin.svg")}
-                  />
-                  <Text style={styles.publicationLocation}>
-                    Ivano-Frankivs'k Region, Ukraine
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.publication}>
-              <Image
-                style={styles.publicationImg}
-                source={require("../assets/favicon.png")}
-              />
-              <Text style={styles.publicationDescription}>Ліс</Text>
-              <View style={styles.publicationInfo}>
-                <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={messageCircle} style={styles.svg} /> */}
-
-                  <Image
-                    style={styles.svg}
-                    source={require("../assets/svg/messageCircle.svg")}
-                  />
-
-                  <Text style={styles.publicationsComentNumber}>0</Text>
-                </View>
-                <View style={styles.publicationElem}>
-                  {/* <SvgXml xml={mapPin} style={styles.svg} /> */}
-                  <Image
-                    style={styles.svg}
-                    source={require("../assets/svg/mapPin.svg")}
-                  />
-                  <Text style={styles.publicationLocation}>
-                    Ivano-Frankivs'k Region, Ukraine
-                  </Text>
-                </View>
-              </View>
-            </View>
+                          <Text style={styles.publicationsComentNumber}>0</Text>
+                        </Pressable>
+                        <Pressable
+                          onPress={() =>
+                            navigation.navigate("MapScreen", {
+                              location: post.location,
+                              userLocation: post.userLocation,
+                            })
+                          }
+                        >
+                          <View style={styles.publicationElem}>
+                            <SvgXml xml={mapPin} style={styles.svg} />
+                            {/* <Image
+                              style={styles.svg}
+                              source={require("../assets/svg/mapPin.svg")}
+                            /> */}
+                            <Text style={styles.publicationLocation}>
+                              {post.location}
+                            </Text>
+                          </View>
+                        </Pressable>
+                      </View>
+                    </View>
+                  );
+                })}
           </View>
         </View>
       </ScrollView>
